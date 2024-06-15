@@ -39,10 +39,7 @@ public class StatisticsOfGrades {
                 System.out.println("Invalid input. Please enter only integer scores separated by spaces.");
             }
         }
-        // String inputScores = scanner.nextLine();
-
-        // String[] scoreStrings = inputScores.split(" ");
-        // return Arrays.stream(scoreStrings).mapToInt(Integer::parseInt).toArray();
+        
     }
 
     // Function to find the minimum score in an array
