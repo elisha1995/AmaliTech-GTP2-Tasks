@@ -1,8 +1,14 @@
 package com.librarytask;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.Stack;
 
 public class LibraryService {
+    private LinkedList<Book> bookList;
+    private LinkedList<Patron> patronList;
+    private Stack<Transaction> transactions = new Stack<>();
+
     public static boolean borrowBook(int bookId, int patronId) throws SQLException {
         try (Connection connection = DatabaseUtil.getConnection()) {
             // Check if the book is available
@@ -197,5 +203,12 @@ public class LibraryService {
         return pstmt.executeQuery();
     }
 
+    public Stack<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Stack<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 }
 

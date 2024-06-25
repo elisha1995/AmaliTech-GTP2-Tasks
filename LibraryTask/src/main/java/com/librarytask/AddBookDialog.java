@@ -1,7 +1,7 @@
 package com.librarytask;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,7 +18,6 @@ public class AddBookDialog extends Stage {
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
-        //grid.setAlignment(Pos.CENTER);
         grid.setHgap(8);
         grid.setVgap(10);
 

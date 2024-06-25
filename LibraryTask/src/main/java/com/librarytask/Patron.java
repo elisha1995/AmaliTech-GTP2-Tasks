@@ -1,39 +1,35 @@
 package com.librarytask;
 
 public class Patron {
+    private int patronId;
     private String name;
     private String email;
     private String password;
+    private String role;
+
+    public Patron(int patronId, String name, String email, String password, String role) {
+        this.patronId = patronId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public int getPatronId() {
+        return patronId;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getRole() {
+        return role;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Patron(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-
-
-    }
+    // Other methods like updateProfile, viewTransactions, etc.
 }

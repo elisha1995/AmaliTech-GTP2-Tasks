@@ -1,48 +1,43 @@
 package com.librarytask;
 
+import java.util.LinkedList;
+
 public class Book {
-    private int bookid;
+    private int bookId;
     private String title;
     private String author;
     private String isbn;
-    private Boolean isAvailable;
+    private boolean isAvailable;
 
-    public Book(String title, String author, String isbn, Boolean isAvailable) {
+    public Book(int bookId, String title, String author, String isbn, boolean isAvailable) {
+        this.bookId = bookId;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.isAvailable = isAvailable;
     }
 
-    public String getTitle() {
-        return title;
+    public int getBookId() {
+        return bookId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getTitle() {
+        return title;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public Boolean getAvailable() {
+    public boolean isAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(Boolean available) {
+    public void setAvailable(boolean available) {
         isAvailable = available;
     }
 }

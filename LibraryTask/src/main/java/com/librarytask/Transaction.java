@@ -7,6 +7,16 @@ public class Transaction {
     private String borrowedDate;
     private String returnedDate;
 
+    public Transaction(int id, int bookId, int patronId, String borrowedDate, String returnedDate) {
+        this.id = id;
+        this.bookId = bookId;
+        this.patronId = patronId;
+        this.borrowedDate = borrowedDate;
+        this.returnedDate = returnedDate;
+
+
+    }
+
     public int getId() {
         return id;
     }
@@ -45,15 +55,5 @@ public class Transaction {
 
     public void setReturnedDate(String returnedDate) {
         this.returnedDate = returnedDate;
-    }
-
-    public Transaction(int id, int bookId, int patronId, String borrowedDate, String returnedDate) {
-        this.id = id;
-        this.bookId = bookId;
-        this.patronId = patronId;
-        this.borrowedDate = borrowedDate;
-        this.returnedDate = returnedDate;
-
-
     }
 }
