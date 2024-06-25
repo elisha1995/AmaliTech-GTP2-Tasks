@@ -75,14 +75,18 @@ public class LibraryService {
         return statement.executeQuery();
     }
 
-    public static boolean addBook(String author, String isbn) throws SQLException {
+    public static boolean addBook(String title, String author, String isbn) throws SQLException {
         try (Connection connection = DatabaseUtil.getConnection()) {
-            String insertBookQuery = "INSERT INTO book (author, isbn, isavailable) VALUES (?, ?, TRUE)";
+            String insertBookQuery = "INSERT INTO book (title, author, isbn, isavailable) VALUES (?, ?, ?, TRUE)";
             try (PreparedStatement stmt = connection.prepareStatement(insertBookQuery)) {
-                stmt.setString(1, author);
-                stmt.setString(2, isbn);
-                stmt.executeUpdate();
-                return true;
+                stmt.setString(1, title);
+                stmt.setString(2, author);
+                stmt.setString(3, isbn);
+                int rowsInserted = stmt.executeUpdate();
+                return rowsInserted > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
             }
         }
     }
@@ -170,6 +174,27 @@ public class LibraryService {
             if (pstmt != null) pstmt.close();
             if (conn != null) conn.close();
         }
+    }
+
+    public static void addUser(String name, String email, String password, String role) throws SQLException {
+        System.out.println("Connecting to database...");
+        Connection conn = DatabaseUtil.getConnection();
+        String sql = "INSERT INTO patron (name, email, password, role) VALUES (?, ?, ?, ?)";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        System.out.println("Preparing statement...");
+        pstmt.setString(1, name);
+        pstmt.setString(2, email);
+        pstmt.setString(3, password);
+        pstmt.setString(4, role);
+        System.out.println("Executing statement...");
+        pstmt.executeUpdate();
+    }
+
+    public static ResultSet getAllUsers() throws SQLException {
+        Connection conn = DatabaseUtil.getConnection();
+        String sql = "SELECT * FROM patron";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        return pstmt.executeQuery();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.librarytask;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,30 +17,36 @@ public class AddBookDialog extends Stage {
         setTitle("Add New Book");
 
         GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        //grid.setAlignment(Pos.CENTER);
+        grid.setHgap(8);
         grid.setVgap(10);
 
-        Label authorLabel = new Label("Author:");
-        grid.add(authorLabel, 0, 0);
+        Label titleLabel = new Label("Title:");
+        GridPane.setConstraints(titleLabel, 0, 0);
+        TextField titleInput = new TextField();
+        GridPane.setConstraints(titleInput, 1, 0);
 
-        TextField authorTextField = new TextField();
-        grid.add(authorTextField, 1, 0);
+        Label authorLabel = new Label("Author:");
+        GridPane.setConstraints(authorLabel, 0, 1);
+        TextField authorInput = new TextField();
+        GridPane.setConstraints(authorInput, 1, 1);
 
         Label isbnLabel = new Label("ISBN:");
-        grid.add(isbnLabel, 0, 1);
-
-        TextField isbnTextField = new TextField();
-        grid.add(isbnTextField, 1, 1);
+        GridPane.setConstraints(isbnLabel, 0, 2);
+        TextField isbnInput = new TextField();
+        GridPane.setConstraints(isbnInput, 1, 2);
 
         Button addButton = new Button("Add Book");
-        grid.add(addButton, 1, 2);
+        GridPane.setConstraints(addButton, 1, 3);
 
         addButton.setOnAction(e -> {
-            String author = authorTextField.getText();
-            String isbn = isbnTextField.getText();
+            String title = titleInput.getText();
+            String author = authorInput.getText();
+            String isbn = isbnInput.getText();
             try {
-                if (LibraryService.addBook(author, isbn)) {
+                if (!title.isEmpty() && !author.isEmpty() && !isbn.isEmpty()) {
+                    LibraryService.addBook(title, author, isbn);
                     System.out.println("Book added successfully");
                     close();
                 } else {
@@ -49,6 +56,8 @@ public class AddBookDialog extends Stage {
                 ex.printStackTrace();
             }
         });
+
+        grid.getChildren().addAll(titleLabel, titleInput, authorLabel, authorInput, isbnLabel, isbnInput, addButton);
 
         Scene scene = new Scene(grid, 300, 200);
         setScene(scene);
