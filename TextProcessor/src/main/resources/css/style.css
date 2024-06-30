@@ -1,0 +1,46 @@
+/* General Styling */
+.root {
+    -fx-background-color: #f4f4f4; /* Light background */
+    -fx-font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+}
+
+/* Text Input and Output Areas */
+.text-area {
+    -fx-border-color: #ccc; /* Light border */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-padding: 10px;
+}
+
+/* Labels */
+.label {
+    -fx-font-weight: bold;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #007bff; /* Blue background */
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border: none;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* List View */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+}
+
+/* Text Fields */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
