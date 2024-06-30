@@ -1,13 +1,21 @@
 package com.textprocessor.controller;
 
+import com.textprocessor.model.DataItem;
 import com.textprocessor.model.DataManager;
 import com.textprocessor.model.RegexProcessor;
+import com.textprocessor.model.RegexProcessor.MatchResult;
+
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.List;
 import java.util.Optional;
+
 
 
 public class MainController {
@@ -33,6 +41,10 @@ public class MainController {
     private TextArea outputTextArea;
 
     @FXML
+    private TextFlow outputTextFlow; // Changed from TextArea to TextFlow
+
+
+    @FXML
     private TextField dataInputField;
 
     @FXML
@@ -45,46 +57,79 @@ public class MainController {
     public void onSearchButtonClick() {
         try {
             String regexPattern = regexTextField.getText();
-            List<String> matches = regexProcessor.searchInCollection(dataManager.getAllData(), regexPattern);
-            outputTextArea.setText(String.join("\n", matches));
+            List<MatchResult> matches = regexProcessor.searchWithPositions(dataManager.getAllData(), regexPattern);
+
+            outputTextFlow.getChildren().clear(); // Clear previous output
+            Text title = new Text(matches.isEmpty() ? "No Search Found!\n\n" : "Search Found:\n\n");
+            title.setFill(Color.BLUE);
+            if (!matches.isEmpty()) {
+                outputTextFlow.getChildren().add(title);
+                for (MatchResult match : matches) {
+                    highlightMatches(match);
+                }
+            } else {
+                title.setFill(Color.RED);
+                outputTextFlow.getChildren().add(title);
+            }
 
         } catch (Exception e) {
-            outputTextArea.setText("Error: " + e.getMessage());
+            outputTextFlow.getChildren().clear();
+            outputTextFlow.getChildren().add(new Text("Error: " + e.getMessage()));
         }
     }
+
 
     @FXML
     public void onPatternMatchButtonClick() {
         try {
             String regexPattern = regexTextField.getText();
-            List<String> matches = regexProcessor.matchInCollection(dataManager.getAllData(), regexPattern);
+            List<MatchResult> matches = regexProcessor.matchWithPositions(dataManager.getAllData(), regexPattern);
+
+            outputTextFlow.getChildren().clear(); // Clear previous output
+            Text title = new Text(matches.isEmpty() ? "No Match Found!\n\n" : "Match Found:\n\n");
+            title.setFill(Color.rgb(230, 14, 212, 1));
             if (!matches.isEmpty()) {
-                outputTextArea.setText("Match found:\n" + String.join("\n", matches));
+                outputTextFlow.getChildren().add(title);
+                for (MatchResult match : matches) {
+                    highlightMatches(match);
+                }
             } else {
-                outputTextArea.setText("No match found.");
+                title.setFill(Color.RED);
+                outputTextFlow.getChildren().add(title);
             }
+
         } catch (Exception e) {
-            outputTextArea.setText("Error: " + e.getMessage());
+            outputTextFlow.getChildren().clear();
+            outputTextFlow.getChildren().add(new Text("Error: " + e.getMessage()));
         }
     }
 
-    /*@FXML
-    public void onPatternMatchButtonClick() {
-        try {
-            String regexPattern = regexTextField.getText();
+    private void highlightMatches(MatchResult match) {
+        String line = match.line();
+        int start = 0;
 
-            List<String> matches = regexProcessor.searchInCollection(dataManager.getAllData(), regexPattern);
-            if (!matches.isEmpty()) {
-                outputTextArea.setText("Match found:\n" + String.join(" ", matches));
+        for (int[] position : match.positions()) {
+            int matchStart = position[0];
+            int matchEnd = position[1];
 
-            } else {
-                outputTextArea.setText("No match found.");
+            if (start < matchStart) {
+                outputTextFlow.getChildren().add(new Text(line.substring(start, matchStart)));
             }
-        } catch (Exception e) {
-            outputTextArea.setText("Error: " + e.getMessage());
-        }
-    }*/
 
+            Text matchingText = new Text(line.substring(matchStart, matchEnd));
+            matchingText.setFill(Color.rgb(43, 14, 230, 1));
+            matchingText.setFont(Font.font(14));
+            outputTextFlow.getChildren().add(matchingText);
+
+            start = matchEnd;
+        }
+
+        if (start < line.length()) {
+            outputTextFlow.getChildren().add(new Text(line.substring(start)));
+        }
+
+        outputTextFlow.getChildren().add(new Text("\n"));
+    }
 
     @FXML
     public void onReplaceButtonClick() {
@@ -92,16 +137,18 @@ public class MainController {
             String regexPattern = regexTextField.getText();
             String replacement = replaceTextField.getText();
 
-            List<String> modifiedData = regexProcessor.searchAndReplaceInCollection(dataManager.getAllData(), regexPattern, replacement);
+            List<DataItem> modifiedData = regexProcessor.searchAndReplaceInCollection(dataManager.getAllData(), regexPattern, replacement);
             dataManager.setDataList(modifiedData); // Update DataManager's data
 
             // Update ListView with the modified data
-             dataListView.getItems().clear();
-             dataListView.getItems().addAll(modifiedData);
+            dataListView.getItems().clear();
+            dataListView.getItems().addAll(modifiedData.stream().map(DataItem::getData).toList());
 
-            outputTextArea.setText("Data replaced successfully.");
+            outputTextFlow.getChildren().clear();
+            outputTextFlow.getChildren().add(new Text("Data replaced successfully."));
         } catch (Exception e) {
-            outputTextArea.setText("Error: " + e.getMessage());
+            outputTextFlow.getChildren().clear();
+            outputTextFlow.getChildren().add(new Text("Error: " + e.getMessage()));
         }
     }
 
@@ -110,7 +157,8 @@ public class MainController {
     public void onAddDataButtonClick() {
         String newData = dataInputField.getText();
         if (!newData.isEmpty()) {
-            dataManager.addData(newData);
+            DataItem newItem = new DataItem(dataManager.getAllData().size() + 1, newData);
+            dataManager.addData(newItem);
             dataListView.getItems().add(newData);
             dataInputField.clear();
         }
@@ -122,8 +170,10 @@ public class MainController {
         if (selectedIndex != -1) {
             String newData = dataInputField.getText();
             if (!newData.isEmpty()) {
-                dataManager.updateData(selectedIndex, newData);
-                dataListView.getItems().set(selectedIndex, newData);
+                DataItem selectedItem = dataManager.getAllData().get(selectedIndex);
+                DataItem newItem = new DataItem(selectedItem.getId(), newData);
+                dataManager.updateData(selectedIndex, newItem);
+                dataListView.getItems().set(selectedIndex, newData);  // Update the String representation
                 dataInputField.clear();
             }
         }
@@ -148,6 +198,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        dataListView.getItems().addAll(dataManager.getAllData());
+        dataListView.getItems().addAll(dataManager.getAllData().stream().map(DataItem::getData).toList());
     }
 }

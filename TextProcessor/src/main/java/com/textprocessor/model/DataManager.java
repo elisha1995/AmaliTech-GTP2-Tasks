@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
-    private List<String> dataList = new ArrayList<>();
+    private List<DataItem> dataList = new ArrayList<>();
 
-    public void addData(String data) {
-        dataList.add(data);
+    public void addData(DataItem dataItem) {
+        dataList.add(dataItem);
     }
 
-    public void updateData(int index, String newData) {
+    public void updateData(int index, DataItem newDataItem) {
         if (index >= 0 && index < dataList.size()) {
-            dataList.set(index, newData);
+            dataList.set(index, newDataItem);
         } else {
             throw new IndexOutOfBoundsException("Invalid index");
         }
@@ -26,11 +26,11 @@ public class DataManager {
         }
     }
 
-    public void setDataList(List<String> dataList) {
+    public void setDataList(List<DataItem> dataList) {
         this.dataList = dataList;
     }
 
-    public List<String> getAllData() {
+    public List<DataItem> getAllData() {
         return new ArrayList<>(dataList); // Return a copy to prevent external modification
     }
 
