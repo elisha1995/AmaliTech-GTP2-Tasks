@@ -27,7 +27,7 @@ The architecture of the application follows a layered approach, separating conce
 - **Utilities**: Contains sorting algorithm implementations (`SortingAlgorithms`).
 
 ### Architecture Diagram
-![Architecture Diagram](/architecture-diagram.png)
+![Architecture Diagram](./architecture-diagram.png)
 
 ## Setup Instructions
 
